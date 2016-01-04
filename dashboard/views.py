@@ -33,6 +33,15 @@ def load_dashboard(request):
 
     dict_input["prod_units_script"]=prod_units_script
     dict_input["prod_units_div"]=prod_units_div
+    well_num=100
+    # dict_input["iters"]=[i for i in range(well_num)]
+
+    table_plots=[]
+    for i in range(well_num):
+        script,div=make_table_plots()
+        table_plots.append([i,script,div])
+    dict_input["table_plots"]=table_plots
+
 
     return render(request, "html/dashboard.html",dict_input)
 
@@ -96,3 +105,27 @@ def make_prod_units_plot():
 
 
     return script, div
+
+
+def make_table_plots():
+    y = dummy_signal(100,3,4)
+    dt=[datetime.datetime.now()+datetime.timedelta(days=i) for i in range(len(y))]
+    fig_width=200
+    fig_height=50
+    s1 = figure(width=fig_width, plot_height=fig_height)
+    s1.line(dt, y, color="navy")
+    s1.xaxis.visible = None
+    s1.yaxis.visible = None
+    s1.logo = None
+    s1.toolbar_location = None
+    s1.outline_line_width = 0
+    s1.outline_line_alpha = 0
+    s1.xgrid.grid_line_color = None
+    s1.ygrid.grid_line_color = None
+    s1.h_symmetry = False
+    s1.min_border = 0
+    s1.min_border_right = 0
+    s1.min_border_left = 0
+
+    script, div = components(s1)
+    return script,div
